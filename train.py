@@ -61,8 +61,8 @@ class Trainer(object):
         self.train_set, self.dev_set, self.test_set = mod.AIShellDataset.splits(config)
         self.train_loader = data.DataLoader(self.train_set, batch_size=config["batch_size"], shuffle=True, 
             drop_last=True, collate_fn=collate_fn)
-        self.dev_loader = data.DataLoader(self.dev_set, batch_size=min(len(self.dev_set), 16), shuffle=False, collate_fn=collate_fn)
-        self.test_loader = data.DataLoader(self.test_set, batch_size=min(len(self.test_set), 16), shuffle=False, collate_fn=collate_fn)
+        self.dev_loader = data.DataLoader(self.dev_set, batch_size=min(len(self.dev_set), 32), shuffle=False, collate_fn=collate_fn)
+        self.test_loader = data.DataLoader(self.test_set, batch_size=min(len(self.test_set), 32), shuffle=False, collate_fn=collate_fn)
 
         self.step_no = 0
         self.schedule_steps = config["schedule"]
@@ -89,7 +89,7 @@ class Trainer(object):
             loss.backward()
             self.optimizer.step()
         val = print_eval(name + " step #{}".format(self.step_no), scores, labels, loss)
-        if out:
+        if out is not None:
             out.append(val)
 
     def evaluate(self):
